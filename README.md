@@ -1,4 +1,4 @@
-# SignSpeak ✋→🔊
+# SignSpeak AI ✋→🔊
 ### Real-Time Sign Language to Speech Converter
 
 > A computer vision pipeline that translates hand gestures into spoken audio in real time —  
@@ -6,7 +6,7 @@
 
 ---
 
-## 🧠 The Problem
+## The Problem
 
 Over **70 million deaf people** worldwide use sign language as their primary mode of communication. Yet the vast majority of the hearing population does not know sign language. This communication barrier makes everyday interactions — at hospitals, shops, offices, and in public — unnecessarily difficult and isolating for the deaf community.
 
@@ -14,7 +14,7 @@ Interpreters are expensive, not always available, and impractical for brief, spo
 
 ---
 
-## 💡 The Solution
+## The Solution
 
 **SignSpeak** is a real-time pipeline that runs entirely on a standard laptop webcam:
 
@@ -26,7 +26,7 @@ A deaf user signs into the camera. The system recognises the gesture, builds up 
 
 ---
 
-## 🎥 Demo
+## Demo
 
 ```
 [Signing: HELLO]       →  "hello"
@@ -38,7 +38,7 @@ A deaf user signs into the camera. The system recognises the gesture, builds up 
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 sign-language-tts/
@@ -70,7 +70,7 @@ sign-language-tts/
 
 ---
 
-## ⚙️ Setup
+## Setup
 
 ### Prerequisites
 - Python 3.9 – 3.11
@@ -97,7 +97,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🚀 How to Use
+## How to Use
 
 ### Step 1 — Collect training data
 
@@ -144,7 +144,7 @@ python src/app.py
 
 ---
 
-## 🔬 How It Works
+## How It Works
 
 ### 1. Hand Landmark Extraction
 [MediaPipe Hands](https://mediapipe.dev/) detects **21 3D keypoints** on each hand per frame at ~30fps. These landmarks are:
@@ -169,7 +169,7 @@ Committed words accumulate in a sentence buffer. After **2.5 seconds of no detec
 
 ---
 
-## 📊 Model Performance
+## Model Performance
 
 *(Results on a 6-gesture dataset with 200 samples each, 80/20 train/test split)*
 
@@ -185,7 +185,7 @@ Committed words accumulate in a sentence buffer. After **2.5 seconds of no detec
 
 ---
 
-## 🛣️ Future Roadmap
+## Future Roadmap
 
 - [ ] **Sequence modelling** — Replace Random Forest with an LSTM to recognise multi-frame dynamic gestures (currently only static poses)
 - [ ] **ISL support** — Add Indian Sign Language gesture set and dataset
@@ -195,7 +195,7 @@ Committed words accumulate in a sentence buffer. After **2.5 seconds of no detec
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! To add a new gesture:
 1. Run `collect_data.py --label <your_gesture>`
@@ -204,18 +204,6 @@ Contributions are welcome! To add a new gesture:
 
 ---
 
-## 📄 License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
-## 🙏 Acknowledgements
-
-- [MediaPipe](https://mediapipe.dev/) by Google — hand landmark detection
-- [scikit-learn](https://scikit-learn.org/) — machine learning pipeline
-- [pyttsx3](https://pyttsx3.readthedocs.io/) — offline text-to-speech
-- [INCLUDE Dataset](https://zenodo.org/record/4010759) — ISL benchmark reference
 
 ---
 
