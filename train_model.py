@@ -1,12 +1,3 @@
-"""
-train_model.py
-Train the gesture classifier from collected landmark samples.
-
-Usage:
-    python train_model.py
-    python train_model.py --data-dir data/samples --output models/gesture_classifier.pkl
-"""
-
 import argparse
 import sys
 import os
@@ -28,7 +19,7 @@ if __name__ == "__main__":
         test_size   = args.test_size,
     )
 
-    print(f"\n🎯  Final accuracy: {results['accuracy']:.2%}")
-    print(f"📦  Classes: {results['labels']}")
-    print(f"📊  Total samples used: {results['n_samples']}")
+    print(f"\n  Final accuracy: {results['accuracy']:.2%}")
+    print(f"  Classes: {results['labels']}")
+    print(f"  Total samples used: {results['n_samples']}")
     print("\nRun the app with:\n    python src/app.py\n")
