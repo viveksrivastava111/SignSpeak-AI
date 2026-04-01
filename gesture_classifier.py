@@ -1,26 +1,13 @@
-"""
-gesture_classifier.py
-Loads a trained scikit-learn model and classifies landmark vectors in real time.
-Also exposes a `train()` function used by train_model.py.
-"""
-
 import os
 import pickle
 import numpy as np
 from typing import Optional
 
 
-# ── Inference ──────────────────────────────────────────────────────────────────
+# Inference 
 
 class GestureClassifier:
-    """
-    Wraps a trained sklearn pipeline (scaler + classifier).
-
-    Supports any model saved with pickle that exposes:
-      - predict(X)
-      - predict_proba(X)
-    """
-
+   
     def __init__(self, model_path: str = "models/gesture_classifier.pkl"):
         if not os.path.exists(model_path):
             raise FileNotFoundError(
@@ -35,15 +22,7 @@ class GestureClassifier:
         print(f"[GestureClassifier] Loaded model with {len(self._labels)} classes: {self._labels}")
 
     def predict(self, landmarks: np.ndarray) -> tuple[Optional[str], float]:
-        """
-        Parameters
-        ----------
-        landmarks : np.ndarray of shape (63,)
-
-        Returns
-        -------
-        (label, confidence) or (None, 0.0) on failure.
-        """
+       
         try:
             X     = landmarks.reshape(1, -1)
             proba = self._model.predict_proba(X)[0]
@@ -54,28 +33,13 @@ class GestureClassifier:
             return None, 0.0
 
 
-# ── Training ───────────────────────────────────────────────────────────────────
-
+# Training
 def train(
     data_dir:   str = "data/samples",
     output_path:str = "models/gesture_classifier.pkl",
     test_size:  float = 0.2,
 ) -> dict:
-    """
-    Train a Random Forest classifier on collected landmark samples.
-
-    Expected directory structure:
-        data/samples/
-            hello/
-                0001.npy   ← shape (63,)
-                0002.npy
-                ...
-            thanks/
-                0001.npy
-                ...
-
-    Returns a dict with accuracy metrics.
-    """
+   
     from sklearn.ensemble import RandomForestClassifier
     from sklearn.preprocessing import StandardScaler
     from sklearn.pipeline import Pipeline
