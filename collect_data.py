@@ -1,14 +1,3 @@
-"""
-collect_data.py
-Interactive tool to record landmark samples for each gesture/word.
-
-Usage:
-    python collect_data.py --label hello --samples 200
-    python collect_data.py --label thanks --samples 200
-
-Landmarks are saved as .npy files under data/samples/<label>/
-"""
-
 import cv2
 import os
 import time
@@ -40,7 +29,7 @@ def collect(label: str, n_samples: int, data_dir: str, camera_index: int):
     countdown = 3
     countdown_start = None
 
-    print(f"\n📸  Collecting {n_samples} samples for gesture: '{label}'")
+    print(f"\n  Collecting {n_samples} samples for gesture: '{label}'")
     print("    Press [SPACE] to start/stop recording, [Q] to quit early.\n")
 
     while collected < n_samples:
@@ -90,7 +79,7 @@ def collect(label: str, n_samples: int, data_dir: str, camera_index: int):
 
     cap.release()
     cv2.destroyAllWindows()
-    print(f"\n✅  Saved {collected} samples for '{label}' → {out_dir}")
+    print(f"\n  Saved {collected} samples for '{label}' → {out_dir}")
 
 
 if __name__ == "__main__":
