@@ -1,8 +1,8 @@
 # SignSpeak AI ✋→🔊
 ### Real-Time Sign Language to Speech Converter
 
-> A computer vision pipeline that translates hand gestures into spoken audio in real time —  
-> enabling deaf individuals to communicate with hearing people without an interpreter.
+A computer vision pipeline that translates hand gestures into spoken audio in real time —  
+enabling deaf individuals to communicate with hearing people without an interpreter.
 
 ---
 
@@ -201,10 +201,3 @@ Contributions are welcome! To add a new gesture:
 1. Run `collect_data.py --label <your_gesture>`
 2. Re-train with `train_model.py`
 3. Open a pull request with the updated model and sample count
-
----
-
-
----
-
-*Built as a BYOP capstone project. The problem is real, the gap is real, and the solution runs on any laptop with a webcam.*
