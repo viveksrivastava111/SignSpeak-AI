@@ -1,8 +1,3 @@
-"""
-landmark_extractor.py
-Wraps MediaPipe Hands to extract 21-point 3D hand landmarks per frame.
-"""
-
 import cv2
 import numpy as np
 import mediapipe as mp
@@ -10,14 +5,7 @@ from typing import Optional
 
 
 class LandmarkExtractor:
-    """
-    Detects hands in a BGR frame and returns normalised landmark vectors.
-
-    Each hand produces 21 landmarks × 3 coordinates (x, y, z) = 63 floats.
-    Coordinates are normalised relative to the bounding box of the hand,
-    making the representation scale- and position-invariant.
-    """
-
+    
     def __init__(
         self,
         max_num_hands:       int   = 1,
@@ -35,21 +23,13 @@ class LandmarkExtractor:
             min_tracking_confidence = min_tracking_conf,
         )
 
-    # ── Public API ─────────────────────────────────────────────────────────────
-
+    # Public API 
     def extract(
         self,
         frame: np.ndarray,
         visualise: bool = False,
     ) -> tuple[Optional[np.ndarray], np.ndarray]:
-        """
-        Process a single BGR frame.
-
-        Returns
-        -------
-        landmarks : np.ndarray of shape (63,) or None if no hand detected.
-        annotated : BGR frame (with or without skeleton overlay).
-        """
+       
         rgb     = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = self._hands.process(rgb)
 
@@ -73,18 +53,11 @@ class LandmarkExtractor:
         landmarks = self._normalise(hand_landmarks)
         return landmarks, annotated
 
-    # ── Private ────────────────────────────────────────────────────────────────
+    # Private
 
     @staticmethod
     def _normalise(hand_landmarks) -> np.ndarray:
-        """
-        Convert MediaPipe landmarks to a normalised flat vector.
-
-        Steps:
-          1. Extract raw (x, y, z) from all 21 landmarks.
-          2. Translate so wrist (landmark 0) is the origin.
-          3. Scale by the maximum absolute coordinate so values ∈ [-1, 1].
-        """
+       
         raw = np.array(
             [[lm.x, lm.y, lm.z] for lm in hand_landmarks.landmark],
             dtype=np.float32,
