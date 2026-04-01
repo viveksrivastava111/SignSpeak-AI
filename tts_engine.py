@@ -1,19 +1,7 @@
-"""
-tts_engine.py
-Text-to-speech output using pyttsx3 (offline) with gTTS fallback.
-"""
-
 import threading
 
-
 class TTSEngine:
-    """
-    Speaks text asynchronously so the video loop is never blocked.
-
-    Primary engine  : pyttsx3  (offline, no API key needed)
-    Fallback engine : gTTS     (online, better voice quality)
-    """
-
+    
     def __init__(self, enabled: bool = True, rate: int = 160, volume: float = 1.0):
         self._enabled = enabled
         self._lock    = threading.Lock()
@@ -24,7 +12,7 @@ class TTSEngine:
 
         self._engine = self._init_pyttsx3(rate, volume)
 
-    # ── Public ─────────────────────────────────────────────────────────────────
+    # Public
 
     def speak(self, text: str) -> None:
         """Speak *text* in a background thread (non-blocking)."""
@@ -33,8 +21,7 @@ class TTSEngine:
         thread = threading.Thread(target=self._speak_blocking, args=(text,), daemon=True)
         thread.start()
 
-    # ── Private ────────────────────────────────────────────────────────────────
-
+    # Private 
     def _speak_blocking(self, text: str) -> None:
         with self._lock:
             try:
