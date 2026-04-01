@@ -1,9 +1,4 @@
-"""
-SignSpeak — Real-time Sign Language to Speech
-Main application entry point.
-
-Pipeline: Camera → MediaPipe Hand Landmarks → Gesture Classifier → Text → TTS
-"""
+#Pipeline: Camera → MediaPipe Hand Landmarks → Gesture Classifier → Text → TTS
 
 import cv2
 import time
@@ -17,7 +12,7 @@ from tts_engine import TTSEngine
 from display import Display
 
 
-# ─── Configuration ────────────────────────────────────────────────────────────
+# Configuration
 
 PREDICTION_BUFFER_SIZE = 10       # Frames to smooth prediction over
 CONFIDENCE_THRESHOLD   = 0.75     # Minimum confidence to accept a prediction
@@ -26,17 +21,9 @@ SENTENCE_PAUSE_SEC     = 2.5      # Seconds of no gesture before speaking senten
 CAMERA_INDEX           = 0        # Default webcam
 
 
-# ─── Main Loop ────────────────────────────────────────────────────────────────
-
+# Main Loop
 def run(camera_index: int = CAMERA_INDEX, speak: bool = True, demo: bool = False):
-    """
-    Launch the real-time sign-language-to-speech pipeline.
 
-    Args:
-        camera_index: OpenCV camera device index.
-        speak:        Whether to output audio via TTS.
-        demo:         If True, overlays landmark visualisation (useful for demos).
-    """
     extractor   = LandmarkExtractor()
     classifier  = GestureClassifier(model_path="models/gesture_classifier.pkl")
     tts         = TTSEngine(enabled=speak)
@@ -55,7 +42,7 @@ def run(camera_index: int = CAMERA_INDEX, speak: bool = True, demo: bool = False
     stable_count:      int        = 0
     last_gesture_time: float      = time.time()
 
-    print("\n✋  SignSpeak is running — press [Q] to quit, [C] to clear sentence.\n")
+    print("\n  SignSpeak is running — press [Q] to quit, [C] to clear sentence.\n")
 
     while True:
         ret, frame = cap.read()
@@ -65,16 +52,16 @@ def run(camera_index: int = CAMERA_INDEX, speak: bool = True, demo: bool = False
 
         frame = cv2.flip(frame, 1)   # Mirror for natural feel
 
-        # ── 1. Extract hand landmarks ──────────────────────────────────────────
+        # 1. Extract hand landmarks
         landmarks, annotated_frame = extractor.extract(frame, visualise=demo)
 
-        # ── 2. Classify gesture ────────────────────────────────────────────────
+        # 2. Classify gesture
         label, confidence = None, 0.0
         if landmarks is not None:
             label, confidence = classifier.predict(landmarks)
             last_gesture_time = time.time()
 
-        # ── 3. Smooth predictions with a majority-vote buffer ─────────────────
+        # 3. Smooth predictions with a majority-vote buffer
         if label and confidence >= CONFIDENCE_THRESHOLD:
             prediction_buffer.append(label)
         else:
@@ -82,7 +69,7 @@ def run(camera_index: int = CAMERA_INDEX, speak: bool = True, demo: bool = False
 
         smoothed_label = _majority_vote(prediction_buffer)
 
-        # ── 4. Word commitment logic ───────────────────────────────────────────
+        # 4. Word commitment logic
         if smoothed_label:
             if smoothed_label == current_word:
                 stable_count += 1
@@ -97,7 +84,7 @@ def run(camera_index: int = CAMERA_INDEX, speak: bool = True, demo: bool = False
         else:
             stable_count = 0
 
-        # ── 5. Sentence flush — speak after pause ──────────────────────────────
+        # 5. Sentence flush — speak after pause
         idle_secs = time.time() - last_gesture_time
         if committed_words and idle_secs >= SENTENCE_PAUSE_SEC:
             sentence = " ".join(committed_words)
@@ -106,7 +93,7 @@ def run(camera_index: int = CAMERA_INDEX, speak: bool = True, demo: bool = False
             committed_words.clear()
             current_word = ""
 
-        # ── 6. Render HUD ──────────────────────────────────────────────────────
+        # 6. Render HUD
         display.render(
             frame          = annotated_frame,
             current_label  = smoothed_label,
@@ -118,7 +105,7 @@ def run(camera_index: int = CAMERA_INDEX, speak: bool = True, demo: bool = False
             pause_threshold= SENTENCE_PAUSE_SEC,
         )
 
-        # ── 7. Keyboard controls ───────────────────────────────────────────────
+        # 7. Keyboard controls
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
             break
@@ -132,8 +119,6 @@ def run(camera_index: int = CAMERA_INDEX, speak: bool = True, demo: bool = False
     print("SignSpeak closed.")
 
 
-# ─── Helpers ──────────────────────────────────────────────────────────────────
-
 def _majority_vote(buffer: deque) -> str:
     """Return the most common non-empty label in the buffer."""
     counts: dict[str, int] = {}
@@ -143,8 +128,7 @@ def _majority_vote(buffer: deque) -> str:
     return max(counts, key=counts.get) if counts else ""
 
 
-# ─── CLI ──────────────────────────────────────────────────────────────────────
-
+# CLI
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="SignSpeak — Sign Language to Speech")
     parser.add_argument("--camera", type=int, default=0,        help="Camera device index (default: 0)")
